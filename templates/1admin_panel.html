@@ -1,0 +1,309 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
+    body{background:radial-gradient(circle at top,#0f2027,#203a43,#2c5364);min-height:100vh;color:#f6fdfe;padding:10px;padding-bottom:80px}
+    .admin-header{width:100%;padding:16px;text-align:center;background:linear-gradient(135deg,#00c6ff,#0072ff);border-radius:12px;margin-bottom:14px}
+    .admin-header h2{font-size:20px}
+    .admin-header small{opacity:.8;font-size:13px}
+    /* USER SELECTOR */
+    .user-bar{background:rgba(255,255,255,.1);border-radius:12px;padding:12px;margin-bottom:14px;backdrop-filter:blur(8px)}
+    .user-bar label{display:block;font-size:12px;opacity:.75;margin-bottom:5px}
+    .user-bar select{width:100%;padding:10px;border-radius:8px;border:none;font-size:14px;background:#fff;color:#000}
+    #userInfo{margin-top:10px;font-size:13px;background:rgba(255,255,255,.08);padding:10px;border-radius:8px;display:none}
+    /* GRID */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+    .card{background:rgba(255,255,255,.1);border-radius:14px;padding:14px;backdrop-filter:blur(8px);box-shadow:0 0 20px rgba(0,255,255,.1)}
+    .card h3{font-size:15px;margin-bottom:8px}
+    .amount{font-size:22px;font-weight:bold;color:#7fffff;margin:4px 0 10px}
+    input[type=number]{width:100%;padding:9px;border-radius:8px;border:none;font-size:14px;margin-bottom:8px}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{flex:1;padding:9px;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:13px}
+    .add{background:linear-gradient(135deg,#11998e,#38ef7d);color:#000}
+    .rem{background:linear-gradient(135deg,#f7971e,#ffd200);color:#000}
+    .approve{background:#28a745;color:#fff}
+    .reject{background:#dc3545;color:#fff}
+    /* VIP */
+    .card.vip-c{border:2px solid #c62828}
+    /* Pending items */
+    .p-item{background:rgba(255,255,255,.08);border-radius:8px;padding:10px;margin-bottom:8px;font-size:13px}
+    .p-item strong{display:block;font-size:14px;margin-bottom:3px}
+    .p-item img{width:100%;max-height:150px;object-fit:contain;border-radius:6px;margin-top:6px}
+    .no-p{opacity:.5;text-align:center;padding:10px;font-size:13px}
+    /* Product */
+    .prod-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.08);padding:9px 10px;border-radius:8px;margin-bottom:6px;gap:8px;flex-wrap:wrap}
+    .prod-row span{flex:1;font-size:13px}
+    .badge{padding:3px 7px;border-radius:5px;font-size:11px;font-weight:bold}
+    .on{background:#28a745;color:#fff}
+    .off{background:#dc3545;color:#fff}
+    /* Full-width cards */
+    .full{grid-column:1/-1}
+    /* Toast */
+    #toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .3s;z-index:9999;pointer-events:none}
+    #toast.show{opacity:1}
+    /* Bottom nav */
+    .bnav{position:fixed;bottom:0;left:0;width:100%;background:#fff;display:flex;border-top:1px solid #ddd;z-index:1000}
+    .bnav a{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 0;text-decoration:none;color:#555;font-size:11px}
+    .bnav a i{font-size:18px;margin-bottom:2px}
+    .bnav a.active,.bnav a:hover{color:#007bff}
+    @media(min-width:1024px){body{max-width:520px;margin:auto}}
+  </style>
+</head>
+<body>
+
+<div class="admin-header">
+  <h2>⚙️ Admin Dashboard</h2>
+  <small>{{ request.user.username }}</small>
+</div>
+
+<!-- USER SELECTOR -->
+<div class="user-bar">
+  <label>Select User to Manage</label>
+  <select id="userSel" onchange="loadUser()">
+    <option value="">-- Choose User --</option>
+    {% for u in users %}
+    <option value="{{ u.id }}">{{ u.username }} — {{ u.first_name }}</option>
+    {% endfor %}
+  </select>
+  <div id="userInfo">
+    📱 <strong id="iMobile">—</strong>&nbsp;&nbsp;
+    💰 Bal: <strong id="iBal">—</strong>&nbsp;
+    🔄 Rch: <strong id="iRch">—</strong>&nbsp;
+    📈 Inc: <strong id="iInc">—</strong>&nbsp;
+    👑 VIP: <strong id="iVip">—</strong>
+  </div>
+</div>
+
+<div class="grid">
+
+  <!-- BALANCE -->
+  <div class="card">
+    <h3>💰 Balance</h3>
+    <div class="amount" id="dBal">₹—</div>
+    <input type="number" id="balAmt" placeholder="Amount">
+    <div class="row">
+      <button class="btn add" onclick="adjust('balance','add')">+ Add</button>
+      <button class="btn rem" onclick="adjust('balance','remove')">− Remove</button>
+    </div>
+  </div>
+
+  <!-- RECHARGE -->
+  <div class="card">
+    <h3>🔄 Recharge</h3>
+    <div class="amount" id="dRch">₹—</div>
+    <input type="number" id="rchAmt" placeholder="Amount">
+    <div class="row">
+      <button class="btn add" onclick="adjust('recharge','add')">+ Add</button>
+      <button class="btn rem" onclick="adjust('recharge','remove')">− Remove</button>
+    </div>
+  </div>
+
+  <!-- INCOME -->
+  <div class="card">
+    <h3>📈 Total Income</h3>
+    <div class="amount" id="dInc">₹—</div>
+    <input type="number" id="incAmt" placeholder="Amount">
+    <div class="row">
+      <button class="btn add" onclick="adjust('total_income','add')">+ Add</button>
+      <button class="btn rem" onclick="adjust('total_income','remove')">− Remove</button>
+    </div>
+  </div>
+
+  <!-- VIP -->
+  <div class="card vip-c">
+    <h3>👑 VIP Status</h3>
+    <div class="amount" id="dVip" style="font-size:16px">—</div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn approve" onclick="vipToggle(true)">✅ Approve</button>
+      <button class="btn reject"  onclick="vipToggle(false)">❌ Cancel</button>
+    </div>
+  </div>
+
+  <!-- PENDING RECHARGES -->
+  <div class="card full">
+    <h3>⏳ Pending Recharge Requests</h3>
+    <div id="pendRch" style="margin-top:10px">
+      {% if pending_recharges %}
+        {% for rr in pending_recharges %}
+        <div class="p-item" id="rr{{ rr.id }}">
+          <strong>{{ rr.user.username }} — ₹{{ rr.amount }}</strong>
+          UTR: {{ rr.utr|default:"Not provided" }}<br>
+          {{ rr.created_at|date:"d M Y, H:i" }}
+          {% if rr.screenshot %}
+            <img src="{{ rr.screenshot.url }}" alt="proof">
+          {% endif %}
+          <div class="row" style="margin-top:8px">
+            <button class="btn approve" onclick="rechargeAct({{ rr.id }},'approve')">Approve</button>
+            <button class="btn reject"  onclick="rechargeAct({{ rr.id }},'reject')">Reject</button>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-p">No pending recharges</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- PENDING WITHDRAWALS -->
+  <div class="card full">
+    <h3>🏧 Pending Withdrawal Requests</h3>
+    <div id="pendWd" style="margin-top:10px">
+      {% if pending_withdrawals %}
+        {% for wr in pending_withdrawals %}
+        <div class="p-item" id="wr{{ wr.id }}">
+          <strong>{{ wr.user.username }} — ₹{{ wr.amount }}</strong>
+          {{ wr.created_at|date:"d M Y, H:i" }}
+          <div class="row" style="margin-top:8px">
+            <button class="btn approve" onclick="withdrawAct({{ wr.id }},'approve')">Approve (₹10 charge)</button>
+            <button class="btn reject"  onclick="withdrawAct({{ wr.id }},'reject')">Reject</button>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-p">No pending withdrawals</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- PRODUCT CONTROL -->
+  <div class="card full">
+    <h3>📦 Product Control</h3>
+    <div id="prodList" style="margin-top:10px">
+      {% for p in products %}
+      <div class="prod-row" id="prod{{ p.product_key }}">
+        <span>{{ p.product_name }}</span>
+        <span class="badge {% if p.is_active %}on{% else %}off{% endif %}" id="badge{{ p.product_key }}">
+          {% if p.is_active %}Active{% else %}Disabled{% endif %}
+        </span>
+        <button class="btn approve" style="flex:0;padding:7px 11px" onclick="prodToggle('{{ p.product_key }}',true)">ON</button>
+        <button class="btn reject"  style="flex:0;padding:7px 11px" onclick="prodToggle('{{ p.product_key }}',false)">OFF</button>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<nav class="bnav">
+  <a href="{% url 'dashboard' %}"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="{% url 'income' %}"><i class="fas fa-wallet"></i><span>Income</span></a>
+  <a href="{% url 'team' %}"><i class="fas fa-users"></i><span>Team</span></a>
+  <a href="{% url 'share' %}"><i class="fas fa-link"></i><span>Share</span></a>
+  <a href="{% url 'admin_panel' %}" class="active"><i class="fas fa-cog"></i><span>Admin</span></a>
+</nav>
+
+<script>
+const CSRF = "{{ csrf_token }}";
+let uid = null;
+
+function toast(msg, ok=true){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = ok ? '#2e7d32' : '#c62828';
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2800);
+}
+
+async function post(url, body){
+  const r = await fetch(url, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+    body: JSON.stringify(body)
+  });
+  return r.json();
+}
+
+async function loadUser(){
+  const sel = document.getElementById('userSel');
+  uid = sel.value;
+  const info = document.getElementById('userInfo');
+  if(!uid){ info.style.display='none'; return; }
+
+  const d = await (await fetch(`/api/admin/user-wallet/${uid}/`)).json();
+  document.getElementById('iMobile').textContent = d.mobile;
+  document.getElementById('iBal').textContent  = '₹'+d.balance;
+  document.getElementById('iRch').textContent  = '₹'+d.recharge;
+  document.getElementById('iInc').textContent  = '₹'+d.total_income;
+  document.getElementById('iVip').textContent  = d.is_vip ? '✅ VIP' : '❌ No';
+  document.getElementById('dBal').textContent  = '₹'+d.balance;
+  document.getElementById('dRch').textContent  = '₹'+d.recharge;
+  document.getElementById('dInc').textContent  = '₹'+d.total_income;
+  document.getElementById('dVip').textContent  = d.is_vip ? '✅ APPROVED' : '❌ NOT APPROVED';
+  info.style.display = 'block';
+}
+
+async function adjust(field, action){
+  if(!uid){ toast('Select a user first', false); return; }
+  const map = {balance:'balAmt', recharge:'rchAmt', total_income:'incAmt'};
+  const amount = parseFloat(document.getElementById(map[field]).value);
+  if(!amount || amount <= 0){ toast('Enter valid amount', false); return; }
+  const d = await post('/api/admin/wallet-adjust/', {user_id:uid, field, action, amount});
+  toast(d.message, d.success);
+  if(d.success){
+    document.getElementById('dBal').textContent = '₹'+d.wallet.balance;
+    document.getElementById('dRch').textContent = '₹'+d.wallet.recharge;
+    document.getElementById('dInc').textContent = '₹'+d.wallet.total_income;
+    document.getElementById('iBal').textContent = '₹'+d.wallet.balance;
+    document.getElementById('iRch').textContent = '₹'+d.wallet.recharge;
+    document.getElementById('iInc').textContent = '₹'+d.wallet.total_income;
+  }
+}
+
+async function vipToggle(approve){
+  if(!uid){ toast('Select a user first', false); return; }
+  if(!confirm(approve ? 'Approve VIP?' : 'Cancel VIP?')) return;
+  const d = await post('/api/admin/vip-toggle/', {user_id:uid, approve});
+  toast(d.message, d.success);
+  if(d.success){
+    const lbl = d.is_vip ? '✅ APPROVED' : '❌ NOT APPROVED';
+    document.getElementById('dVip').textContent = lbl;
+    document.getElementById('iVip').textContent = d.is_vip ? '✅ VIP' : '❌ No';
+  }
+}
+
+async function rechargeAct(id, action){
+  if(!confirm(action==='approve'?'Approve recharge?':'Reject recharge?')) return;
+  const d = await post('/api/admin/recharge-action/', {id, action});
+  toast(d.message, d.success);
+  if(d.success){
+    const el = document.getElementById('rr'+id);
+    if(el) el.remove();
+    if(!document.querySelector('#pendRch .p-item'))
+      document.getElementById('pendRch').innerHTML='<p class="no-p">No pending recharges</p>';
+  }
+}
+
+async function withdrawAct(id, action){
+  if(!confirm(action==='approve'?'Approve withdrawal?':'Reject withdrawal?')) return;
+  const d = await post('/api/admin/withdrawal-action/', {id, action});
+  toast(d.message, d.success);
+  if(d.success){
+    const el = document.getElementById('wr'+id);
+    if(el) el.remove();
+    if(!document.querySelector('#pendWd .p-item'))
+      document.getElementById('pendWd').innerHTML='<p class="no-p">No pending withdrawals</p>';
+  }
+}
+
+async function prodToggle(key, isActive){
+  const d = await post('/api/admin/product-toggle/', {product_key:key, is_active:isActive});
+  toast(d.message, d.success);
+  if(d.success){
+    const badge = document.getElementById('badge'+key);
+    if(badge){
+      badge.textContent = isActive ? 'Active' : 'Disabled';
+      badge.className = 'badge '+(isActive?'on':'off');
+    }
+  }
+}
+</script>
+</body>
+</html>

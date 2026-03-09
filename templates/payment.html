@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Payment{% endblock %}
+{% block extra_css %}
+<style>
+.header{background:#495fef;color:#fff;text-align:center;padding:12px;position:relative}
+.go-back{position:absolute;left:10px;top:50%;transform:translateY(-50%);background:#410be2;color:#fff;border:none;padding:6px 10px;border-radius:4px;cursor:pointer}
+.header-amount{font-size:30px;font-weight:bold;margin:4px 0}
+.timer{font-size:15px}
+.card{padding:15px}
+.methods{display:flex;gap:10px;margin-bottom:12px}
+.method{flex:1;background:#eef7ff;border-radius:8px;padding:12px;text-align:center;border:2px solid transparent;cursor:pointer}
+.method.active{border-color:#6b63ff}
+.method img{height:26px;display:block;margin:auto}
+.notice{background:#dff1ff;padding:10px;font-size:13px;border-radius:6px;margin-bottom:12px}
+.qr-wrap{display:flex;justify-content:center;margin:14px 0}
+.qr-wrap img{width:180px;height:180px}
+.utr-group{display:flex;flex-direction:column;gap:8px}
+.utr-group input,.utr-group input[type=file]{width:100%;padding:10px;border-radius:6px;border:1px solid #ccc;font-size:14px}
+.submit-btn{margin-top:10px;width:100%;padding:12px;background:#3804f4;color:#fff;border:none;border-radius:6px;font-size:15px;cursor:pointer}
+.error{color:red;font-size:13px;margin-top:6px;padding:0 15px}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="header">
+  <button class="go-back" onclick="history.back()">←</button>
+  <div>Payment Amount</div>
+  <div class="header-amount">₹{{ amount }}</div>
+  <div class="timer" id="timer">00:10:00</div>
+</div>
+
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+<div class="card">
+  <h4>Select Payment Method</h4>
+  <div class="methods">
+    <div class="method active" id="m-phonepe" onclick="selectMethod('phonepe')">
+      <img src="https://img.icons8.com/color/96/phone-pe.png" alt="PhonePe">
+      <span>PhonePe</span>
+    </div>
+    <div class="method" id="m-paytm" onclick="selectMethod('paytm')">
+      <img src="https://img.icons8.com/color/96/paytm.png" alt="Paytm">
+      <span>Paytm</span>
+    </div>
+  </div>
+
+  <div class="notice">Do not use the same QR code multiple times.</div>
+
+  <div class="qr-wrap">
+    <img id="qrImg" src="" alt="QR Code">
+  </div>
+
+  <!-- FORM → Django view (no JS storage) -->
+  <form method="POST" action="{% url 'submit_payment' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="amount" value="{{ amount }}">
+    <div class="utr-group">
+      <input type="text" name="utr" placeholder="Enter 12-digit UTR after payment" maxlength="12" required>
+      <input type="file" name="screenshot" accept="image/*">
+      <button type="submit" class="submit-btn">Submit Payment</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const UPI_ID    = "plumal3@ptyes";
+const PAYEE     = "Recharge";
+let   amount    = {{ amount }};
+let   method    = "PHONEPE";
+let   timeLeft  = 600;
+
+function genQR() {
+  const note = `Payment via ${method}`;
+  const upi  = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(PAYEE)}&am=${amount}&tn=${encodeURIComponent(note)}&cu=INR`;
+  document.getElementById('qrImg').src =
+    `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upi)}`;
+}
+
+function selectMethod(m) {
+  method = m.toUpperCase();
+  document.querySelectorAll('.method').forEach(el => el.classList.remove('active'));
+  document.getElementById('m-' + m).classList.add('active');
+  genQR();
+}
+
+const tEl = document.getElementById('timer');
+const iv  = setInterval(()=>{
+  if (--timeLeft <= 0) {
+    clearInterval(iv);
+    document.body.innerHTML = '<div style="text-align:center;padding:60px"><h2>Session Expired</h2><button onclick="location.reload()">Refresh</button></div>';
+    return;
+  }
+  const m = String(Math.floor(timeLeft/60)).padStart(2,'0');
+  const s = String(timeLeft%60).padStart(2,'0');
+  tEl.textContent = `00:${m}:${s}`;
+}, 1000);
+
+genQR();
+</script>
+{% endblock %}

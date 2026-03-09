@@ -1,0 +1,155 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #f2f3f5;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  max-width: 400px;
+  width: 90%;
+  margin: auto;
+  background: #fff;
+  padding: 30px 25px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.box h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #1e3c72;
+  font-size: 22px;
+}
+
+.login-logo {
+  display: block;
+  margin: 0 auto 16px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.logo-wrap {
+  text-align: center;
+}
+
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=number] {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 12px;
+  border-radius: 10px;
+  border: 1px solid #dde0e8;
+  font-size: 15px;
+  background: #f7f8fc;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus {
+  border-color: #6f97ff;
+  background: #fff;
+}
+
+.password-box {
+  position: relative;
+  margin-top: 12px;
+}
+
+.password-box input {
+  width: 100%;
+  padding: 12px 40px 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #dde0e8;
+  font-size: 15px;
+  background: #f7f8fc;
+  outline: none;
+  margin-top: 0;
+}
+
+.password-box input:focus {
+  border-color: #6f97ff;
+  background: #fff;
+}
+
+.eye-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  width: auto;
+  margin: 0;
+  color: #888;
+}
+
+.submit-btn {
+  display: block;
+  width: 100%;
+  margin-top: 18px;
+  padding: 13px;
+  background: linear-gradient(135deg, #1e3c72, #6f97ff);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: opacity 0.2s;
+}
+
+.submit-btn:hover {
+  opacity: 0.92;
+}
+
+.error {
+  background: #fdecea;
+  color: #c62828;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-top: 12px;
+  border-left: 4px solid #e53935;
+}
+
+.switch-link {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #555;
+}
+
+.switch-link a {
+  color: #1e3c72;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.switch-link a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .box {
+    padding: 22px 18px;
+    border-radius: 12px;
+  }
+}

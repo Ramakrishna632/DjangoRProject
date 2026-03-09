@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}My Purchases{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+/* Progress styling */
+.progress-text {
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    table th, table td {
+        font-size: 12px;
+        padding: 6px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>My Purchases</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Plan</th>
+            <th>Price</th>
+            <th>Daily Income</th>
+            <th>Days</th>
+            <th>Start Date</th>
+            <th>Status</th>
+            <th>Total days<br>_____________</br> Remaining days</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in purchases %}
+        {% with completed=p.income_days.all|length %}
+        <tr>
+            <td>{{ p.plan_name }}</td>
+            <td>₹{{ p.price }}</td>
+            <td>₹{{ p.daily_income }}</td>
+            <td>{{ p.days }}</td>
+            <td>{{ p.start_date|date:"Y-m-d H:i" }}</td>
+            <td>
+                {% if p.is_active %}
+                    <span style="color:green;">Active</span>
+                {% else %}
+                    <span style="color:red;">Completed</span>
+                {% endif %}
+            </td>
+            <td>
+                <span class="progress-text">{{ completed }}/{{ p.days }} day{% if p.days != 1 %}s{% endif %}</span>
+            </td>
+        </tr>
+        {% endwith %}
+        {% empty %}
+        <tr>
+            <td colspan="7">No purchases yet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

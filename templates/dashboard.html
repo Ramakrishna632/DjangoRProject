@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- HEADER -->
+<div class="header">
+  <div class="profile">
+    <img src="{% static 'logo.png' %}" alt="logo">
+    <div>
+      <strong> Welcome {{ request.user.username }}</strong><br>
+      <span class="vip">{% if is_vip %}VIP ✓{% else %}VIP 0{% endif %}</span>
+    </div>
+  </div>
+</div>
+
+<!-- WALLET -->
+<div class="wallet">
+  
+  <div><p>Balance</p><h3>₹{{ wallet.balance|floatformat:0 }}</h3></div>
+  <div><p>Recharge</p><h3>₹{{ wallet.recharge|floatformat:0 }}</h3></div>
+  <div><p>Total Income</p><h3>₹{{ wallet.total_income|floatformat:0 }}</h3></div>
+</div>
+
+<!-- ACTIONS -->
+<div class="actions">
+  <div onclick="window.location.href='{% url 'recharge' %}'">Recharge</div>
+  <div onclick="window.location.href='{% url 'withdraw' %}'">Withdraw</div>
+  <div>Service</div>
+  <div>Channel</div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" id="tab-daily" onclick="switchTab('daily')">Day income</button>
+  <button class="tab" id="tab-vip" onclick="handleVipTab()">VIP</button>
+</div>
+
+<!-- DAILY PRODUCTS -->
+<div class="products tab-content active" id="daily">
+{% with ps=product_statuses %}
+
+  <div class="product">
+    <img src="{% static 'above5.png' %}" alt="">
+    <h4>Dry Iron</h4>
+    <div class="info">
+      <div>₹580<br><small>Price</small></div>
+      <div>₹40<br><small>Daily</small></div>
+      <div>16<br><small>Days</small></div>
+      <div>₹640<br><small>Total</small></div>
+    </div>
+    {% if ps.starter %}<button onclick="buyProduct('starter')">Buy Now</button>
+    {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+  </div>
+
+  <div class="product">
+    <img src="{% static 'above26.png' %}" alt="">
+    <h4>Electric kettle</h4>
+    <div class="info">
+      <div>₹2,199<br><small>Price</small></div>
+      <div>₹100<br><small>Daily</small></div>
+      <div>30<br><small>Days</small></div>
+      <div>₹3,000<br><small>Total</small></div>
+    </div>
+    {% if ps.growth %}<button onclick="buyProduct('growth')">Buy Now</button>
+    {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+  </div>
+
+  <div class="product">
+    <img src="{% static '45.png' %}" alt="">
+    <h4>Air Purifier</h4>
+    <div class="info">
+      <div>₹5,999<br><small>Price</small></div>
+      <div>₹250<br><small>Daily</small></div>
+      <div>30<br><small>Days</small></div>
+      <div>₹7,500<br><small>Total</small></div>
+    </div>
+    {% if ps.lucky %}<button onclick="buyProduct('lucky')">Buy Now</button>
+    {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+  </div>
+
+  <div class="product">
+    <img src="{% static 'coller10k.png' %}" alt="">
+    <h4>Summer Cooler/h4>
+    <div class="info">
+      <div>₹14,111<br><small>Price</small></div>
+      <div>₹466<br><small>Daily</small></div>
+      <div>45<br><small>Days</small></div>
+      <div>₹21,000<br><small>Total</small></div>
+    </div>
+    {% if ps.master8 %}<button onclick="buyProduct('master8')">Buy Now</button>
+    {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+  </div>
+
+  <div class="product">
+    <img src="{% static 'ac45k.png' %}" alt="">
+    <h4>Split AC</h4>
+    <div class="info">
+      <div>₹31,000<br><small>Price</small></div>
+      <div>₹775<br><small>Daily</small></div>
+      <div>40<br><small>Days</small></div>
+      <div>₹42,000<br><small>Total</small></div>
+    </div>
+    {% if ps.fortune11 %}<button onclick="buyProduct('fortune11')">Buy Now</button>
+    {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+  </div>
+
+  <div class="product">
+    <img src="{% static 'ctscan3cr.png' %}" alt="">
+    <h4>Ct scan</h4>
+    <div class="info">
+      <div>₹75,999<br><small>Price</small></div>
+      <div>₹2,000<br><small>Daily</small></div>
+      <div>100<br><small>Days</small></div>
+      <div>₹2,00,000<br><small>Total</small></div>
+    </div>
+    {% if ps.elite27 %}<button onclick="buyProduct('elite27')">Buy Now</button>
+    {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+  </div>
+
+  <div class="product">
+    <img src="{% static 'heart start99k.png' %}" alt="">
+    <h4>Heart start vision </h4>
+    <div class="info">
+      <div>₹1,08,999<br><small>Price</small></div>
+      <div>₹4,000<br><small>Daily</small></div>
+      <div>75<br><small>Days</small></div>
+      <div>₹3,00,000<br><small>Total</small></div>
+    </div>
+    {% if ps.vision108 %}<button onclick="buyProduct('vision108')">Buy Now</button>
+    {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+  </div>
+
+{% endwith %}
+</div>
+
+<!-- VIP PRODUCTS -->
+<div class="products tab-content" id="vip" style="display:none;">
+  {% if is_vip %}
+  {% with ps=product_statuses %}
+  <!-- VIP 1 -->
+    <div class="product vip-card" style="overflow:hidden;position:relative">
+      <img src="{% static 'vip66.png' %}">
+      <span class="vip-badge">VIP 1</span>
+      <h4>Starter Plan</h4>
+      <p class="vip-note">Smart Wifi Air Purifier</p>
+      <div class="info">
+        <div>₹1000<br><small>Price</small></div>
+        <div>₹350<br><small>Daily</small></div>
+        <div>30<br><small>Days</small></div>
+        <div>₹10500<br><small>Total</small></div>
+      </div>
+      {% if ps.vip1 %}<button onclick="buyProduct('plan1')">Buy Now</button>
+      {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+    </div>
+
+
+    <!-- VIP 2 -->
+    <div class="product vip-card" style="overflow:hidden;position:relative">
+      <img src="{% static 'medical advance.png' %}" class="vip-img">
+      <span class="vip-badge">VIP 2</span>
+      <h4>Silver Plan</h4>
+      <p class="vip-note">Advanced Testing</p>
+      <div class="info">
+        <div>₹3000<br><small>Price</small></div>
+        <div>₹150<br><small>Daily</small></div>
+        <div>30<br><small>Days</small></div>
+        <div>₹31,500<br><small>Total</small></div>
+      </div>
+      {% if ps.vip1 %}<button onclick="buyProduct('plan2')">Buy Now</button>
+      {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+    </div>
+
+    <!-- VIP 3 -->
+    <div class="product vip-card" style="overflow:hidden;position:relative">
+      <img src= "{% static 'RARE EARTH METALS.png' %}" class="vip-img">
+  <span class="vip-badge">VIP 3</span>
+  <h4>Gold Plan</h4>
+      <p class="vip-note">Rare Earths</p>
+      <div class="info">
+        <div>₹5000<br><small>Price</small></div>
+        <div>₹1750<br><small>Daily</small></div>
+        <div>30<br><small>Days</small></div>
+        <div>₹52,500<br><small>Total</small></div>
+      </div>
+      {% if ps.vip1 %}<button onclick="buyProduct('plan3')">Buy Now</button>
+      {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+    </div>
+
+    <!-- VIP 4 -->
+    <div class="product vip-card" style="overflow:hidden;position:relative">
+      <img src="{% static 'Rocket.png' %}" class="vip-img">
+      <span class="vip-badge">VIP 4</span>
+      <h4>Platinum Plan</h4>
+      <p class="vip-note">Rocket</p>
+      <div class="info">
+        <div>₹8000<br><small>Price</small></div>
+        <div>₹2800<br><small>Daily</small></div>
+        <div>30<br><small>Days</small></div>
+        <div>₹8400<br><small>Total</small></div>
+      </div>
+      {% if ps.vip1 %}<button onclick="buyProduct('plan4')">Buy Now</button>
+      {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+    </div>
+
+    <!-- VIP 5 -->
+    <div class="product vip-card" style="overflow:hidden;position:relative">
+      <img src="{% static 'DIMONDSET.png' %}"class="vip-img">
+      <span class="vip-badge">VIP 5</span>
+      <h4>Diamond Plan</h4>
+      <p class="vip-note">Dimond premium</p>
+      <div class="info">
+        <div>₹12,000<br><small>Price</small></div>
+        <div>₹4200<br><small>Daily</small></div>
+        <div>30<br><small>Days</small></div>
+        <div>₹1,26,000<br><small>Total</small></div>
+      </div>
+      {% if ps.vip1 %}<button onclick="buyProduct('plan5')">Buy Now</button>
+      {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+    </div>
+
+
+    <!-- VIP 6 -->
+    <div class="product vip-card" style="overflow:hidden;position:relative">
+      <img src="{% static 'radar.png' %}" class="vip-img">
+      <span class="vip-badge">VIP 6</span>
+      <h4>Premium Plan</h4>
+      <p class="vip-note">Radar defence</p>
+      <div class="info">
+        <div>₹20000<br><small>Price</small></div>
+        <div>₹7000<br><small>Daily</small></div>
+        <div>30<br><small>Days</small></div>
+        <div>₹210000<br><small>Total</small></div>
+      </div>
+      {% if ps.vip1 %}<button onclick="buyProduct('plan6')">Buy Now</button>
+      {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+    </div>
+
+
+    <!-- VIP 7 -->
+    <div class="product vip-card" style="overflow:hidden;position:relative">
+      <img src="{% static 'vip7.png' %}" class="vip-img">
+      <span class="vip-badge">VIP 7</span>
+      <h4>Elite Plan</h4>
+      <p class="vip-note">Oil Refinery</p>
+      <div class="info">
+        <div>₹35,000<br><small>Price</small></div>
+        <div>₹12250<br><small>Daily</small></div>
+        <div>30<br><small>Days</small></div>
+        <div>₹367500<br><small>Total</small></div>
+      </div>
+      {% if ps.vip1 %}<button onclick="buyProduct('plan7')">Buy Now</button>
+      {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+    </div>
+
+
+    <!-- VIP 8 -->
+    <div class="product vip-card" style="overflow:hidden;position:relative">
+      <img src="{% static 'Engion coolent.png' %}" class="vip-img">
+  <span class="vip-badge">VIP 8</span>
+  <h4>Master Plan</h4>
+
+      <p class="vip-note">Daily income, Daily withdrawal</p>
+      <div class="info">
+        <div>₹50,000<br><small>Price</small></div>
+        <div>₹17500<br><small>Daily</small></div>
+        <div>30<br><small>Days</small></div>
+        <div>₹525000<br><small>Total</small></div>
+      </div>
+      {% if ps.vip1 %}<button onclick="buyProduct('plan8')">Buy Now</button>
+      {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+    </div>
+
+
+
+    <!-- VIP 9 -->
+    <div class="product vip-card" style="overflow:hidden;position:relative">
+       <img src="{% static 'boat.png' %}" class="vip-img">
+  <span class="vip-badge">VIP 9</span>
+  <h4>Ultimate Plan</h4>
+      <p class="vip-note">Daily income, Daily withdrawal</p>
+      <div class="info">
+        <div>₹100000<br><small>Price</small></div>
+        <div>₹35,000<br><small>Daily</small></div>
+        <div>30<br><small>Days</small></div>
+        <div>₹1050000<br><small>Total</small></div>
+      </div>
+      {% if ps.vip2 %}<button onclick="buyProduct('plan9')">Buy Now</button>
+      {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
+    </div>
+  {% endwith %}
+  {% else %}
+    <div style="text-align:center;padding:40px;color:#888">
+      👑 VIP not activated.<br>Contact admin to unlock VIP plans.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const IS_VIP = {{ is_vip|yesno:"true,false" }};
+const CSRF   = "{{ csrf_token }}";
+document.addEventListener("DOMContentLoaded", function () {
+
+    const vipProducts = document.querySelectorAll(".vip-product");
+
+    if (!IS_VIP) {
+        vipProducts.forEach(product => {
+            product.style.opacity = "0.5";
+            product.style.pointerEvents = "none";
+        });
+    }
+
+});
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => { el.style.display='none'; el.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  const t = document.getElementById(tab);
+  if (t) { t.style.display = 'grid'; t.classList.add('active'); }
+  const b = document.getElementById('tab-' + tab);
+  if (b) b.classList.add('active');
+}
+
+function handleVipTab() {
+  if (!IS_VIP) { alert('VIP not activated. Contact admin.'); return; }
+  switchTab('vip');
+}
+
+async function buyProduct(key) {
+  if (!confirm('Confirm purchase?')) return;
+  const res  = await fetch("{% url 'buy_product' %}", {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','X-CSRFToken': CSRF},
+    body: JSON.stringify({product_key: key})
+  });
+  const data = await res.json();
+  alert(data.message);
+  if (data.success) location.reload();
+}
+</script>
+{% endblock %}

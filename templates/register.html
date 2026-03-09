@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — Stryker Dairy</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: linear-gradient(135deg, #1e3c72, #2a5298, #6f97ff);
+      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 0;
+    }
+    .box {
+      max-width: 380px;
+      width: 90%;
+      background: #fff;
+      padding: 35px 28px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    .logo-wrap {
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    h2 {
+      text-align: center;
+      color: #1e3c72;
+      font-size: 22px;
+      margin: 10px 0 6px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #888;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+    .field {
+      margin-top: 14px;
+    }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .field input {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 10px;
+      border: 1.5px solid #dde0e8;
+      font-size: 15px;
+      background: #f7f8fc;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .field input:focus {
+      border-color: #6f97ff;
+      background: #fff;
+    }
+    .field .icon-input {
+      position: relative;
+    }
+    .field .icon-input i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #aaa;
+      font-size: 16px;
+    }
+    .field .icon-input input {
+      padding-left: 40px;
+    }
+    .optional-badge {
+      display: inline-block;
+      font-size: 10px;
+      background: #e8f0ff;
+      color: #6f97ff;
+      padding: 2px 7px;
+      border-radius: 20px;
+      margin-left: 6px;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .submit-btn {
+      display: block;
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      background: linear-gradient(135deg, #1e3c72, #6f97ff);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      box-shadow: 0 6px 20px rgba(111,151,255,0.35);
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .submit-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+    .submit-btn:active { transform: translateY(0); }
+    .switch-link {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 14px;
+      color: #666;
+    }
+    .switch-link a {
+      color: #1e3c72;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .switch-link a:hover { text-decoration: underline; }
+    .terms {
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 14px;
+    }
+  </style>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<div class="box">
+
+  <div class="logo-wrap">
+    <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#6f97ff,#1e3c72);display:flex;align-items:center;justify-content:center;margin:auto;font-size:26px;">🐄</div>
+  </div>
+
+  <h2>Create Account</h2>
+  <p class="subtitle">Join Stryker Investment</p>
+
+  <form method="POST" action="{% url 'register' %}">
+  {% csrf_token %}
+
+    <div class="field">
+      <label><i class="fas fa-user" style="margin-right:4px;color:#6f97ff"></i> Full Name</label>
+      <div class="icon-input">
+        <i class="fas fa-user"></i>
+        <input type="text" name="name" placeholder="Enter your full name">
+      </div>
+    </div>
+
+    <div class="field">
+      <label><i class="fas fa-mobile-alt" style="margin-right:4px;color:#6f97ff"></i> Mobile Number</label>
+      <div class="icon-input">
+        <i class="fas fa-mobile-alt"></i>
+        <input type="text" name="mobile" placeholder="10-digit mobile number" maxlength="10">
+
+      </div>
+    </div>
+
+    <div class="field">
+      <label><i class="fas fa-lock" style="margin-right:4px;color:#6f97ff"></i> Password</label>
+      <div class="icon-input">
+        <i class="fas fa-lock"></i>
+        <input type="password" name="password" placeholder="Create a password">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>
+        <i class="fas fa-ticket-alt" style="margin-right:4px;color:#6f97ff"></i>
+        Invitation Code
+        <span class="optional-badge">optional</span>
+      </label>
+      <div class="icon-input">
+        <i class="fas fa-ticket-alt"></i>
+        <input type="text" name="invitation_code" placeholder="Enter invitation code">
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn">
+      <i class="fas fa-user-plus" style="margin-right:6px"></i> Register Now
+    </button>
+
+  </form>
+
+  <p class="terms">By registering you agree to our Terms & Privacy Policy</p>
+
+  <p class="switch-link">
+    Already have an account? <a href="{% url 'login' %}">Back to Login</a>
+  </p>
+
+</div>
+
+</body>
+</html>

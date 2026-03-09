@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Withdraw{% endblock %}
+{% block extra_css %}
+<style>
+.top-bar{height:52px;background:#3e558b;color:#fff;display:flex;align-items:center;padding:0 12px}
+.top-bar span{font-size:20px;cursor:pointer}
+.top-bar h3{flex:1;text-align:center;margin-right:20px;font-weight:normal}
+.card{background:#d7dce8;margin:15px;padding:15px;border-radius:10px}
+.card label{font-size:14px;color:#333;margin-bottom:6px;display:block;font-weight:500}
+.input-box{background:#bfc6d6;border-radius:6px;padding:10px;display:flex;align-items:center;margin-bottom:12px}
+.input-box span{margin-right:8px;font-size:16px}
+.input-box input{border:none;background:transparent;outline:none;width:100%;font-size:15px}
+.balance-info{font-size:13px;margin-bottom:10px;color:#333}
+.balance-info strong{color:#2e7d32}
+.withdraw-btn{width:100%;padding:14px;background:#3e558b;color:#fff;border:none;border-radius:8px;font-size:15px;margin-top:10px;cursor:pointer}
+.bank-card{background:#e2e5ec;margin:15px;padding:14px;border-radius:10px;font-size:14px}
+.bank-card h4{margin-bottom:8px;color:#3e558b}
+.bind-btn{width:100%;padding:12px;background:#e4e7ee;border:none;border-radius:8px;color:#3e558b;font-size:14px;margin-top:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.error{color:red;font-size:13px;margin:0 15px 5px}
+.min-note{font-size:12px;color:#888;margin-top:4px}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+  <span onclick="history.back()">←</span>
+  <h3>Withdraw</h3>
+</div>
+
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+<form method="POST" action="{% url 'withdraw' %}">
+  {% csrf_token %}
+  <div class="card">
+    <label>Amount</label>
+    <div class="input-box">
+      <span>₹</span>
+      <input type="number" name="amount" placeholder="Enter amount" min="99" required>
+    </div>
+    <div class="balance-info">
+      Available Balance: <strong>₹{{ wallet.balance|floatformat:0 }}</strong>
+      <div class="min-note">Minimum withdrawal: ₹99 &nbsp;|&nbsp; ₹10 charge applied</div>
+    </div>
+
+    <label>Login Password</label>
+    <div class="input-box">
+      <span>🔒</span>
+      <input type="password" name="password" placeholder="Enter login password" required>
+    </div>
+
+    <button type="submit" class="withdraw-btn">Submit Withdraw</button>
+  </div>
+</form>
+
+<!-- BANK INFO -->
+<div class="bank-card">
+  <h4>⚙ Bank Details</h4>
+  {% if profile.bank_account %}
+    <p>Name: {{ profile.bank_name }}</p>
+    <p>IFSC: {{ profile.bank_ifsc }}</p>
+    <p>Account: {{ profile.bank_account|slice:":4" }}****{{ profile.bank_account|slice:"-4:" }}</p>
+  {% else %}
+    <p style="color:#c62828">No bank account linked. Please bind your bank first.</p>
+  {% endif %}
+  <a href="{% url 'bind_bank' %}">
+    <button type="button" class="bind-btn">
+      <i class="fas fa-university"></i> Manage Bank Card
+    </button>
+  </a>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Income History{% endblock %}
+{% block extra_css %}
+<style>
+.page-header{background:linear-gradient(135deg,#5b8cff,#7aa9ff);color:#fff;padding:15px;display:flex;align-items:center;gap:12px;font-size:18px;font-weight:bold}
+.summary{display:flex;justify-content:space-around;background:#6f97ff;color:#fff;padding:15px 0;text-align:center;margin-bottom:10px}
+.txn-list{padding:10px 15px}
+.txn-item{background:#fff;border-radius:10px;padding:12px 15px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);display:flex;justify-content:space-between;align-items:center}
+.txn-title{font-weight:bold;font-size:14px}
+.txn-date{font-size:11px;color:#999;margin-top:3px}
+.credit{color:#2e7d32;font-weight:bold}
+.debit{color:#c62828;font-weight:bold}
+.empty{text-align:center;color:#aaa;padding:40px}
+.live-section{background:#fff;margin:10px 15px;border-radius:10px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.live-item{padding:6px 0;font-size:13px;border-bottom:1px solid #eee;color:#555}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <i class="fas fa-arrow-left" onclick="history.back()" style="cursor:pointer"></i>
+  Income History
+</div>
+
+<div class="summary">
+  <div><p>Balance</p><h3>₹{{ wallet.balance|floatformat:0 }}</h3></div>
+  <div><p>Recharge</p><h3>₹{{ wallet.recharge|floatformat:0 }}</h3></div>
+  <div><p>Total Income</p><h3>₹{{ wallet.total_income|floatformat:0 }}</h3></div>
+</div>
+
+<div class="txn-list">
+  {% if transactions %}
+    {% for txn in transactions %}
+    <div class="txn-item">
+      <div>
+        <div class="txn-title">{{ txn.title }}</div>
+        <div class="txn-date">{{ txn.date|date:"d M Y, H:i" }} &nbsp;|&nbsp; {{ txn.txn_id }}</div>
+        <div class="txn-date">
+          <span class="{% if txn.status == 'success' %}credit{% elif txn.status == 'rejected' %}debit{% else %}'' {% endif %}">
+            {{ txn.get_status_display }}
+          </span>
+        </div>
+      </div>
+      <div class="{% if txn.txn_type == 'PURCHASE' or txn.txn_type == 'WITHDRAW' %}debit{% else %}credit{% endif %}">
+        {% if txn.txn_type == 'PURCHASE' or txn.txn_type == 'WITHDRAW' %}−{% else %}+{% endif %}₹{{ txn.amount|floatformat:0 }}
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty">No transactions yet.</div>
+  {% endif %}
+</div>
+
+<!-- Live global feed (purely frontend demo - no real data needed) -->
+<div class="live-section">
+  <h3 style="margin-bottom:8px">🌍 Live Transactions</h3>
+  <div id="liveFeed"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const names=["James","Maria","David","Wei","Fatima","Liam","Olivia","Noah","Emma","Arjun","Rahul","Sophia","Ahmed","Carlos","Chen","Ivan"];
+const plans=["Plan Starter","Plan Growth","Lucky","VIP Plan A"];
+const msgs=["Excellent returns!","Trusted app","Daily profit received","Fast withdrawal","Highly recommended"];
+function rnd(a){return a[Math.floor(Math.random()*a.length)];}
+const feed=document.getElementById("liveFeed");
+setInterval(()=>{
+  const d=document.createElement("div");
+  d.className="live-item";
+  d.textContent=`${rnd(names)}${Math.floor(Math.random()*999)} invested ₹${(Math.floor(Math.random()*99)+1)*500} in ${rnd(plans)} — ${rnd(msgs)}`;
+  feed.prepend(d);
+  if(feed.children.length>8) feed.removeChild(feed.lastChild);
+},1800);
+</script>
+{% endblock %}

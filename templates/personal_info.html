@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Personal Information{% endblock %}
+{% block extra_css %}
+<style>
+.topbar{background:#6f8def;color:#fff;text-align:center;padding:14px;font-weight:600;font-size:16px}
+.card-nav{padding:15px;display:flex;flex-direction:column;gap:12px;margin-top:5px}
+.nav-card{border-radius:14px;color:#fff;font-size:16px;font-weight:600;padding:22px 20px;text-decoration:none;display:flex;align-items:center;gap:12px}
+.nav-card.orange{background:#ffa726}
+.nav-card.green{background:#7cb342}
+.nav-card.blue{background:#1985a1}
+.nav-card.purple{background:#313eb2}
+.nav-card i{font-size:20px}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="topbar">Personal Information</div>
+
+<div class="card-nav">
+  <a href="{% url 'bind_email' %}" class="nav-card orange">
+    <i class="fas fa-envelope"></i> Bind Email
+  </a>
+  <a href="{% url 'bind_bank' %}" class="nav-card green">
+    <i class="fas fa-university"></i> Bind Bank Card
+  </a>
+  <a href="{% url 'change_password' %}" class="nav-card blue">
+    <i class="fas fa-lock"></i> Change Password
+  </a>
+</div>
+
+{% if profile.bank_account %}
+<div style="margin:0 15px;background:#fff;border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.07);font-size:14px">
+  <strong>Bank Details</strong><br>
+  Name: {{ profile.bank_name }}<br>
+  IFSC: {{ profile.bank_ifsc }}<br>
+  Account: {{ profile.bank_account|slice:":4" }}****{{ profile.bank_account|slice:"-4:" }}
+</div>
+{% endif %}
+
+{% if profile.email %}
+<div style="margin:10px 15px;background:#fff;border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.07);font-size:14px">
+  <strong>Email:</strong> {{ profile.email }}<br>
+  <strong>Nickname:</strong> {{ profile.nickname }}
+</div>
+{% endif %}
+{% endblock %}

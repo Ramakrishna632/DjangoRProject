@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My Profile{% endblock %}
+
+{% block extra_css %}
+<style>
+.profile-header{background:linear-gradient(135deg,#749ff0,#2a5298);color:#fff;padding:20px;display:flex;gap:15px;align-items:center}
+.avatar{background:#fff;color:#1e3c72;width:60px;height:60px;border-radius:50%;font-size:12px;text-align:center;padding-top:14px;font-weight:bold;flex-shrink:0}
+.avatar small{display:block;font-size:10px;color:#f1c40f}
+.user-info{flex:1}
+.phone{font-size:16px;margin-bottom:6px}
+.stats{background:#5089f5;display:flex;padding:12px 0;color:#fff}
+.stat{flex:1;text-align:center}
+.stat-value{font-size:16px;font-weight:bold}
+.stat-label{font-size:12px;opacity:.8}
+.stat-divider{width:1px;background:rgba(255,255,255,.3)}
+.menu{background:#fff;border-radius:12px;overflow:hidden;margin:15px;box-shadow:0 3px 10px rgba(0,0,0,.05)}
+.menu-item{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-bottom:1px solid #eee;text-decoration:none;color:#333;transition:.2s}
+.menu-item:last-child{border-bottom:none}
+.menu-item i{font-size:18px;width:22px;text-align:center;color:#007bff}
+.menu-item span{font-size:14px}
+.menu-item:hover{background:#f5f8ff}
+.menu-item.logout i,.menu-item.logout span{color:#e74c3c}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-header">
+  <div class="avatar">
+    <span>About</span>
+    <small>{% if is_vip %}ABOUT✓{% else %}App{% endif %}</small>
+  </div>
+  <div class="user-info">
+    <div class="phone">{{ request.user.username }}</div>
+    <div style="font-size:13px;opacity:.85">{{ profile.nickname|default:request.user.first_name }}</div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat">
+    <div class="stat-value">₹{{ wallet.balance|floatformat:0 }}</div>
+    <div class="stat-label">Balance</div>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-value">₹{{ wallet.recharge|floatformat:0 }}</div>
+    <div class="stat-label">Recharge</div>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-value">₹{{ wallet.total_income|floatformat:0 }}</div>
+    <div class="stat-label">Total Income</div>
+  </div>
+</div>
+
+<div class="menu">
+  <a class="menu-item" href="{% url 'my_message' %}">
+    <i class="fas fa-envelope"></i><span>Messages</span>
+  </a>
+  <a class="menu-item" href="{% url 'personal_info' %}">
+    <i class="fas fa-user"></i><span>Personal Information</span>
+  </a>
+  <a class="menu-item" href="{% url 'income' %}">
+    <i class="fas fa-chart-line"></i><span>Income Details</span>
+  </a>
+  <a class="menu-item" href="{% url 'recharge_records' %}">
+    <i class="fas fa-credit-card"></i><span>Recharge Details</span>
+  </a>
+  <a class="menu-item" href="{% url 'withdrawal_records' %}">
+    <i class="fas fa-money-bill-wave"></i><span>Withdrawal Details</span>
+  </a>
+
+   <a class="menu-item" href="{% url 'purchased_products' %}">
+    <i class="fas fa-box"></i><span>Purchased Products</span>
+  </a>
+
+   <a class="menu-item" href="{% url 'share' %}" >
+    <i class="fas fa-link"></i><span>Share</span>
+  </a>
+
+
+  <a class="menu-item" href="{% url 'about' %}">
+    <i class="fas fa-circle-info"></i><span>About Us</span>
+  </a>
+  <a class="menu-item logout" href="{% url 'logout' %}">
+    <i class="fas fa-power-off"></i><span>Log Out</span>
+  </a>
+</div>
+{% endblock %}

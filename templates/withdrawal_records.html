@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Withdrawal Records{% endblock %}
+{% block extra_css %}
+<style>
+.top-bar{height:52px;background:#7a9ef2;color:#fff;display:flex;align-items:center;padding:0 12px}
+.top-bar span{font-size:20px;cursor:pointer}
+.top-bar h3{flex:1;text-align:center;margin-right:20px;font-weight:normal}
+.records{padding:12px}
+.record{background:#fff;border-radius:8px;padding:12px;margin-bottom:10px;box-shadow:0 2px 5px rgba(0,0,0,.07)}
+.record-header{display:flex;justify-content:space-between;font-weight:bold;margin-bottom:4px}
+.pending{color:orange}
+.success{color:green}
+.rejected{color:red}
+.record small{display:block;color:#777;margin-top:3px;font-size:12px}
+.empty{text-align:center;color:#aaa;padding:40px}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+  <span onclick="history.back()">←</span>
+  <h3>Withdrawal Records</h3>
+</div>
+
+<div class="records">
+  {% if records %}
+    {% for w in records %}
+    <div class="record">
+      <div class="record-header">
+        <span>₹{{ w.amount|floatformat:0 }}</span>
+        <span class="{{ w.status }}">
+          {% if w.status == 'success' %}
+            Approved ✅
+          {% elif w.status == 'rejected' %}
+            Rejected ❌
+          {% elif w.status == 'pending' %}
+            Processing ⏳
+          {% endif %}
+        </span>
+      </div>
+      {% if w.status == 'success' %}
+        <small>Final Amount: ₹{{ w.final_amount|floatformat:0 }} (₹{{ w.charge }} charge)</small>
+      {% endif %}
+      <small>{{ w.created_at|date:"d M Y, H:i" }}</small>
+      <small>Ref: {{ w.txn_id }}</small>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty">No withdrawal records yet.</div>
+  {% endif %}
+</div>
+{% endblock %}

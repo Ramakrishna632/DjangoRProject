@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Bind Email{% endblock %}
+{% block extra_css %}
+<style>
+.top-bar{height:52px;background:#3e558b;color:#fff;display:flex;align-items:center;padding:0 12px}
+.top-bar span{font-size:20px;cursor:pointer}
+.top-bar h3{flex:1;text-align:center;margin-right:20px;font-weight:normal}
+.form-card{background:#e2e5ec;margin:15px;padding:15px;border-radius:12px}
+.form-card label{font-size:14px;margin:10px 0 6px;display:block;color:#333}
+.form-card input{width:100%;padding:12px;border-radius:6px;border:none;background:#cfd5e2;font-size:14px;box-sizing:border-box}
+.confirm-btn{width:100%;margin-top:18px;padding:14px;background:#3e558b;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+  <span onclick="history.back()">←</span>
+  <h3>Bank Email</h3>
+</div>
+
+<form method="POST" action="{% url 'bind_email' %}">
+  {% csrf_token %}
+  <div class="form-card">
+    <label>Nickname</label>
+    <input type="text" name="nickname" placeholder="Enter nickname" value="{{ profile.nickname }}">
+
+    <label>Email Address</label>
+    <input type="email" name="email" placeholder="Enter email" value="{{ profile.email }}">
+
+    <button type="submit" class="confirm-btn">Save</button>
+  </div>
+</form>
+{% endblock %}

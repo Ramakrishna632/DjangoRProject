@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Recharge Records{% endblock %}
+{% block extra_css %}
+<style>
+.top-bar{height:52px;background:#7a9ef2;color:#fff;display:flex;align-items:center;padding:0 12px}
+.top-bar span{font-size:20px;cursor:pointer}
+.top-bar h3{flex:1;text-align:center;margin-right:20px;font-weight:normal}
+.records{padding:12px}
+.record{background:#fff;border-radius:8px;padding:12px;margin-bottom:10px;box-shadow:0 2px 5px rgba(0,0,0,.07)}
+.record-header{display:flex;justify-content:space-between;font-weight:bold;margin-bottom:4px}
+.pending{color:orange}
+.approved{color:green}
+.rejected{color:red}
+.record small{display:block;color:#777;margin-top:3px;font-size:12px}
+.record img{width:100%;max-height:160px;object-fit:contain;border-radius:6px;margin-top:8px}
+.empty{text-align:center;color:#aaa;padding:40px}
+.new-btn{display:block;margin:12px 15px;padding:14px;background:#7a9ef2;color:#fff;border:none;border-radius:8px;font-size:15px;text-align:center;text-decoration:none;cursor:pointer}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+  <span onclick="history.back()">←</span>
+  <h3>Recharge Records</h3>
+</div>
+
+<a href="{% url 'recharge' %}" class="new-btn">+ New Recharge</a>
+
+<div class="records">
+  {% if records %}
+    {% for r in records %}
+    <div class="record">
+      <div class="record-header">
+        <span>₹{{ r.amount|floatformat:0 }}</span>
+        <span class="{{ r.status }}">
+          {% if r.status == 'approved' %}Approved ✅
+          {% elif r.status == 'rejected' %}Rejected ❌
+          {% else %}Processing ⏳{% endif %}
+        </span>
+      </div>
+      <small>UTR: {{ r.utr|default:"—" }}</small>
+      <small>{{ r.created_at|date:"d M Y, H:i" }}</small>
+      <small>Ref: {{ r.txn_id }}</small>
+      {% if r.screenshot %}
+        <!-- <img src="{{ r.screenshot.url }}" alt="payment proof"> -->
+      {% endif %}
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty">No recharge records yet.</div>
+  {% endif %}
+</div>
+{% endblock %}

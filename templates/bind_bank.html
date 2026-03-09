@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Bind Bank Card{% endblock %}
+{% block extra_css %}
+<style>
+.top-bar{height:52px;background:#3e558b;color:#fff;display:flex;align-items:center;padding:0 12px}
+.top-bar span{font-size:20px;cursor:pointer}
+.top-bar h3{flex:1;text-align:center;margin-right:20px;font-weight:normal}
+.card-preview{margin:20px 15px;height:110px;background:linear-gradient(135deg,#111,#444);border-radius:12px;color:#ccc;padding:18px;position:relative;box-shadow:0 6px 15px rgba(0,0,0,.2)}
+.card-preview p{margin-top:35px;font-size:15px}
+.chip{width:42px;height:32px;background:#d4af37;border-radius:5px;position:absolute;right:18px;top:18px}
+.form-card{background:#e2e5ec;margin:15px;padding:15px;border-radius:12px}
+.form-card label{font-size:14px;margin:10px 0 6px;display:block;color:#333}
+.form-card input{width:100%;padding:12px;border-radius:6px;border:none;background:#cfd5e2;font-size:14px;box-sizing:border-box}
+.confirm-btn{width:100%;margin-top:18px;padding:14px;background:#3e558b;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer}
+.error{color:red;font-size:13px;margin:0 15px}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+  <span onclick="history.back()">←</span>
+  <h3>Bank Card</h3>
+</div>
+
+<div class="card-preview">
+  <div class="chip"></div>
+  <p>Real Name: {{ profile.bank_name|default:"Not linked" }}</p>
+</div>
+
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+<form method="POST" action="{% url 'bind_bank' %}">
+  {% csrf_token %}
+  <div class="form-card">
+    <label>Real Name</label>
+    <input type="text" name="name" placeholder="Enter real name" value="{{ profile.bank_name }}" required>
+
+    <label>IFSC Code</label>
+    <input type="text" name="ifsc" placeholder="e.g. SBIN0001234" value="{{ profile.bank_ifsc }}" maxlength="11" required>
+
+    <label>Bank Account Number</label>
+    <input type="text" name="acc" placeholder="Enter Bank Account Number" value="{{ profile.bank_account }}" required>
+
+    <button type="submit" class="confirm-btn">Confirm</button>
+  </div>
+</form>
+{% endblock %}

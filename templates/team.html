@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Team{% endblock %}
+{% block extra_css %}
+<style>
+.top-bar{background:#6a8dff;color:#fff;padding:15px;text-align:center;position:relative}
+.top-bar .back{position:absolute;left:15px;top:15px;cursor:pointer;font-size:18px;text-decoration:none;color:#fff}
+.stats{display:flex;gap:10px;padding:15px}
+.stat-box{flex:1;background:#6a8dff;color:#fff;text-align:center;padding:15px;border-radius:10px}
+.stat-box p{margin:0;font-size:13px;opacity:.85}
+.stat-box h3{margin:4px 0 0;font-size:20px}
+.levels{display:flex;gap:10px;padding:0 15px 15px}
+.level{flex:1;background:#eaf0ff;text-align:center;padding:12px;border-radius:10px;font-size:14px}
+.level h4{margin:0 0 4px;font-size:15px}
+.level p{margin:0;color:#666;font-size:12px}
+.level.active{background:#fff;border:2px solid #6a8dff;color:#6a8dff}
+.level.active h4{color:#6a8dff}
+.member-list{padding:0 15px}
+.member-card{background:#fff;border-radius:8px;padding:12px;margin-bottom:8px;box-shadow:0 2px 5px rgba(0,0,0,.07);font-size:14px;display:flex;justify-content:space-between;align-items:center}
+.no-data{text-align:center;margin-top:60px;color:#bbb;font-size:18px;letter-spacing:4px}
+.ref-box{background:#eaf0ff;margin:15px;border-radius:10px;padding:14px;font-size:14px}
+.ref-box strong{display:block;margin-bottom:4px;color:#2a5298}
+.ref-code{font-size:18px;font-weight:bold;color:#6a8dff;letter-spacing:2px}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+  <a href="{% url 'dashboard' %}" class="back">✕</a>
+  <h2>Team LV.1</h2>
+</div>
+
+<!-- Referral code -->
+<div class="ref-box">
+  <strong>Your Referral Code</strong>
+  <span class="ref-code">{{ profile.referral_code }}</span>
+  <div style="font-size:12px;color:#888;margin-top:4px">Share this code so your team members can register using it</div>
+</div>
+
+<div class="stats">
+  <div class="stat-box">
+    <p>Total Recharge</p>
+    <h3>₹{% for m in level1 %}{% if m.user.wallet %}{{ m.user.wallet.recharge|floatformat:0 }}{% endif %}{% empty %}0{% endfor %}</h3>
+  </div>
+  <div class="stat-box">
+    <p>Team Size</p>
+    <h3>{{ level1|length }}</h3>
+  </div>
+</div>
+
+<div class="levels">
+  <div class="level active">
+    <h4>LV:1</h4>
+    <p>Income 25%</p>
+  </div>
+  <div class="level">
+    <h4>LV:2</h4>
+    <p>Income 3%</p>
+  </div>
+  <div class="level">
+    <h4>LV:3</h4>
+    <p>Income 2%</p>
+  </div>
+</div>
+
+<div class="member-list">
+  {% if level1 %}
+    {% for m in level1 %}
+    <div class="member-card">
+      <div>
+        <strong>{{ m.user.username }}</strong>
+        <div style="font-size:12px;color:#888">Joined: {{ m.user.date_joined|date:"d M Y" }}</div>
+      </div>
+      <div style="text-align:right;font-size:13px;color:#2a5298">
+        {% if m.user.wallet %}
+          ₹{{ m.user.wallet.recharge|floatformat:0 }} recharged
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="no-data">NO DATA</div>
+  {% endif %}
+</div>
+{% endblock %}

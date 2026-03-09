@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Recharge{% endblock %}
+{% block extra_css %}
+<style>
+.top-bar{height:52px;background:#7a9ef2;color:#fff;display:flex;align-items:center;padding:0 12px}
+.top-bar span{font-size:20px;cursor:pointer}
+.top-bar h3{flex:1;text-align:center;margin-right:20px;font-weight:normal}
+.amount-options{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:15px}
+.amount-options button{padding:12px 0;border-radius:22px;border:none;background:#e4e7ee;color:#333;font-size:14px;cursor:pointer}
+.amount-options button.active{background:#6590f4;color:#fff}
+.available{padding:0 15px;font-size:14px;color:#333}
+.amount-input{margin:10px 15px;background:#fff;padding:14px;border-radius:8px;font-size:18px;display:flex;align-items:center}
+.amount-input input{border:none;outline:none;font-size:18px;margin-left:6px;width:100%}
+.pay-btn{width:calc(100% - 30px);margin:15px;padding:14px;background:#80a1ee;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer}
+.info-text{padding:10px 15px;font-size:13px;color:#3e558b}
+.info-text p{margin-bottom:8px}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+  <span onclick="history.back()">←</span>
+  <h3>Recharge</h3>
+</div>
+
+<div class="amount-options">
+  {% for a in amounts %}
+  <button onclick="selectAmt({{ a }},this)">{{ a }}</button>
+  {% endfor %}
+</div>
+
+<p class="available">Available: ₹{{ wallet.balance|floatformat:0 }}</p>
+
+<div class="amount-input">
+  ₹ <input type="number" id="amtInput" value="{{ amounts.0 }}" min="450" oninput="updateBtn()">
+</div>
+
+<button class="pay-btn" id="payBtn" onclick="goPay()">Pay {{ amounts.0 }}</button>
+
+<div class="info-text">
+  <p>Minimum Recharge: ₹450</p>
+  <p>Please pay and submit UTR within the stipulated time.</p>
+  <p>Do not save old account recharge.</p>
+  <p>Recharge time 7 × 24 hours</p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function selectAmt(a, btn) {
+  document.querySelectorAll('.amount-options button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('amtInput').value = a;
+  updateBtn();
+}
+function updateBtn() {
+  const a = parseInt(document.getElementById('amtInput').value)||0;
+  document.getElementById('payBtn').textContent = 'Pay ' + a;
+  document.getElementById('payBtn').disabled = a < 450;
+}
+function goPay() {
+  const a = parseInt(document.getElementById('amtInput').value)||0;
+  if (a < 450) { alert('Minimum ₹450'); return; }
+  window.location.href = "{% url 'payment' %}?amount=" + a;
+}
+</script>
+{% endblock %}

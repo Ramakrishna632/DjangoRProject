@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Messages{% endblock %}
+{% block extra_css %}
+<style>
+.msg-wrap{display:flex;align-items:center;justify-content:center;min-height:80vh;padding:20px}
+.container{background:#fff;width:100%;max-width:420px;padding:25px;border-radius:16px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.1)}
+h1{font-size:22px;color:#3a4f9a;margin-bottom:10px}
+.intro{font-size:15px;color:#555;margin-bottom:15px}
+.points{list-style:none;padding:0;text-align:left;margin:20px 0}
+.points li{font-size:14px;margin-bottom:8px;color:#333}
+.note{font-size:14px;color:#3a4f9a;font-weight:bold;margin-top:15px}
+.start-btn{display:block;margin-top:20px;padding:12px;background:#6f97ff;color:#fff;text-decoration:none;font-size:16px;border-radius:10px}
+
+.bonus{
+color:red;
+font-weight:bold;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="msg-wrap">
+  <div class="container">
+    <h1>Welcome!</h1>
+    <p class="intro"><b>This is a trusted application to help you earn money and build a bright future.</b></p>
+
+    <ul class="points">
+      <li>✔ Easy to use for everyone</li>
+      <li>✔ Daily income system</li>
+      <li>✔ Long-term investment plan</li>
+      <li>✔ Many people already earning</li>
+      <li>✔ Safe and trusted platform</li>
+      <li>✔ Real income, real users</li>
+    </ul>
+
+     <p class="bonus">First-time purchase bonus: ₹100</p>
+
+    <p>Daily earnings, daily withdrawals.</p>
+
+    <p class="points">
+      Minimum deposit: ₹530 <br>
+      Minimum withdrawal: ₹130 <br>
+      Withdrawal time: 00:30am - 17:00pm
+    </p>
+
+
+    <p class="note">Invest smart. Earn daily. Build your future.</p>
+    <a href="{% url 'my_profile' %}" class="start-btn">Start Now</a>
+  </div>
+</div>
+{% endblock %}

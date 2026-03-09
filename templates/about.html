@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Us{% endblock %}
+
+{% block extra_css %}
+<style>
+
+.container{
+    max-width:420px;
+    margin:auto;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+    color:#2a5298;
+    margin-bottom:20px;
+}
+
+p{
+    font-size:15px;
+    line-height:1.6;
+    margin-bottom:15px;
+    color:#444;
+}
+
+.highlight{
+    background:#e8efff;
+    padding:15px;
+    border-radius:12px;
+    text-align:center;
+    font-size:16px;
+    color:#1e3c72;
+    margin-bottom:20px;
+}
+
+.box{
+    background:#fff;
+    border-radius:14px;
+    padding:15px;
+    margin:20px 0;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+.box h2{
+    font-size:18px;
+    color:#2a5298;
+    margin-bottom:10px;
+}
+
+.box ul{
+    list-style:none;
+    padding:0;
+}
+
+.box li{
+    padding:6px 0;
+    font-size:14px;
+}
+
+.emotion{
+    font-weight:600;
+    text-align:center;
+    color:#1e3c72;
+    margin-bottom:10px;
+}
+
+.back-btn{
+    display:block;
+    text-align:center;
+    margin-top:20px;
+    padding:12px;
+    background:linear-gradient(135deg,#2a5298,#4e7cff);
+    color:#fff;
+    text-decoration:none;
+    border-radius:12px;
+    font-weight:bold;
+}
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+
+<h1>About Us</h1>
+
+<div class="highlight">
+Not everyone gets this opportunity.<br>
+But <strong>you did</strong>.
+</div>
+
+<p>
+This application is made for people who dream of a better life — people who want a safe and long-term future.
+</p>
+
+<p>
+Many people have already joined. They started small, trusted the process, and today they are earning with confidence.
+</p>
+
+<p>
+This is not fake. This is <strong>planning, patience, and trust</strong>.
+</p>
+
+
+<div class="box">
+<h2>Our Mission</h2>
+
+<ul>
+<li>✔ Help people earn honestly</li>
+<li>✔ Support long-term investment</li>
+<li>✔ Build a strong and bright future</li>
+</ul>
+
+</div>
+
+
+<p class="emotion">
+Not everyone is lucky to find a real opportunity.
+</p>
+
+<p class="emotion">
+If you are here today, value it. Your future starts with one step.
+</p>
+
+
+<a href="{% url 'my_profile' %}" class="back-btn">
+Back to My Profile
+</a>
+
+
+<!-- STRYKER SECTION -->
+
+<div class="box">
+
+<h2>About Stryker</h2>
+
+<p>
+Stryker is a global leader in medical technologies and, together with our customers,
+we are driven to make healthcare better. We offer innovative products and services in
+MedSurg, Neurotechnology and Orthopaedics that help improve patient and healthcare outcomes.
+</p>
+
+<p>
+Alongside its customers around the world, Stryker impacts more than 150 million patients
+annually. More information is available at stryker.com and careers.stryker.com.
+</p>
+
+</div>
+
+
+<div class="box">
+
+<h2>Company Facts</h2>
+
+<ul>
+
+<li>✔ 2024 Sales: $22.6 billion</li>
+
+<li>✔ Industry: Medical Instruments & Supplies</li>
+
+<li>✔ Employees: 53,000 worldwide</li>
+
+<li>✔ 44+ Manufacturing and R&D Locations Worldwide</li>
+
+<li>✔ $1.5 billion spent on research and development in 2024</li>
+
+<li>✔ ~14,200 patents owned globally in 2024</li>
+
+<li>✔ Products sold in ~75 countries</li>
+
+<li>✔ Fortune 500 Company</li>
+
+<li>✔ 9 consecutive years as one of the World's Best Workplace</li>
+
+</ul>
+
+</div>
+
+</div>
+
+{% endblock %}

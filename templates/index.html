@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Nandini Dairy</title>
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
+</head>
+
+<body>
+
+
+<!-- HEADER -->
+<div class="header">
+
+<div class="profile">
+
+<img src="{% static 'images/logo.png' %}">
+
+<div>
+
+<br>
+<span class="vip">VIP 0</span>
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- WALLET -->
+<div class="wallet">
+
+<div>
+<p>Balance</p>
+<h3 id="balance">0</h3>
+</div>
+
+<div>
+<p>Recharge</p>
+<h3 id="recharge">0</h3>
+</div>
+
+<div>
+<p>Total Income</p>
+<h3 id="income">0</h3>
+</div>
+
+</div>
+
+
+
+<!-- ACTION BUTTONS -->
+<div class="actions">
+
+<div onclick="openRecharge()">Recharge</div>
+
+<div onclick="openWithdraw()">Withdraw</div>
+
+<div>Service</div>
+
+<div>Channel</div>
+
+</div>
+
+
+
+<!-- TABS -->
+
+<div class="tabs">
+
+<button class="tab active">Day income</button>
+
+<button class="tab">VIP</button>
+
+</div>
+
+
+
+<!-- DAILY PLANS -->
+
+<div class="products">
+
+{% for plan in daily_plans %}
+
+<div class="product">
+
+<img src="{{ plan.image.url }}">
+
+<h4>{{ plan.name }}</h4>
+
+<div class="info">
+
+<div>₹{{ plan.price }}<br><small>Price</small></div>
+
+<div>₹{{ plan.daily_income }}<br><small>Daily</small></div>
+
+<div>{{ plan.days }}<br><small>Days</small></div>
+
+<div>₹{{ plan.total_income }}<br><small>Total</small></div>
+
+</div>
+
+<button class="buy-btn" data-product="{{ plan.id }}">
+Buy Now
+</button>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+
+<!-- VIP PLANS -->
+
+<div class="products">
+
+{% for plan in vip_plans %}
+
+<div class="product vip-card">
+
+<span class="vip-badge">VIP</span>
+
+<h4>{{ plan.name }}</h4>
+
+<p>Daily income</p>
+
+<div class="info">
+
+<div>₹{{ plan.price }}</div>
+
+<div>₹{{ plan.daily_income }}</div>
+
+<div>{{ plan.days }}</div>
+
+<div>₹{{ plan.total_income }}</div>
+
+</div>
+
+<button class="buy-btn" data-product="{{ plan.id }}">
+Buy Now
+</button>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+
+<!-- BOTTOM NAVIGATION -->
+
+<nav class="bottom-nav">
+
+<a href="{% url 'home' %}" class="active">
+<i class="fas fa-home"></i>
+<span>Home</span>
+</a>
+
+<a href="{% url 'income' %}">
+<i class="fas fa-wallet"></i>
+<span>Income</span>
+</a>
+
+<a href="{% url 'team' %}">
+<i class="fas fa-users"></i>
+<span>Team</span>
+</a>
+
+<a href="{% url 'share' %}">
+<i class="fas fa-link"></i>
+<span>Share</span>
+</a>
+
+<a href="{% url 'my' %}">
+<i class="fas fa-user"></i>
+<span>My</span>
+</a>
+
+</nav>
+
+
+
+<script src="{% static 'js/app.js' %}"></script>
+
+<script>
+
+function openRecharge(){
+window.location.href="/recharge/"
+}
+
+function openWithdraw(){
+window.location.href="/withdraw/"
+}
+
+</script>
+
+</body>
+</html>
