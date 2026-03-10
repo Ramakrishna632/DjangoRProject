@@ -9,16 +9,19 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+"""
+Django settings for R project.
+"""
 import os
+import dj_database_url
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-j&*0b(7&*a!5tk078%^j+*^1wh4g9pn$o_a77zi^rd0@wz=kjf'
-
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']  # Change to your domain in production
+# ─── Security ────────────────────────────────────────────────────
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-j&*0b(7&*a!5tk078%^j+*^1wh4g9pn$o_a77zi^rd0@wz=kjf')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = ['*']
 
 # ─── Application definition ─────────────────────────────────────
 INSTALLED_APPS = [
@@ -29,12 +32,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'T',
-    # Uncomment below ONLY after: pip install django-crontab
-    # 'django_crontab',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ← ADDED (must be 2nd)
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -43,18 +45,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# ─── Cron job (uncomment after pip install django-crontab) ──────
-# CRONJOBS = [
-#     ('0 0 * * *', 'T.tasks.distribute_daily_income'),
-# ]
-
 ROOT_URLCONF = 'R.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],   # app templates
-        'APP_DIRS': True,                   # also reads T/templates/
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -69,15 +66,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'R.wsgi.application'
 
 # ─── Database ────────────────────────────────────────────────────
+# Automatically uses Railway's DATABASE_URL in production,
+# falls back to your local PostgreSQL when developing
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'newprojectdb',
-        'USER': 'postgres',
-        'PASSWORD': 'newpassword',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default='postgresql://postgres:newpassword@localhost:5432/newprojectdb',
+        conn_max_age=600,
+        ssl_require=False,
+    )
 }
 
 # ─── Password validation ─────────────────────────────────────────
@@ -90,17 +86,18 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # ─── Internationalisation ────────────────────────────────────────
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Kolkata'   # IST — change if needed
+TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
 # ─── Static & Media files ────────────────────────────────────────
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',       # project-level static
-    BASE_DIR / 'T' / 'static', # app-level static
+    BASE_DIR / 'static',
+    BASE_DIR / 'T' / 'static',
 ]
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # used by collectstatic in production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # ← ADDED
 
 MEDIA_URL  = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -110,18 +107,9 @@ LOGIN_URL = 'login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# Keep user logged in even after closing browser
-
-
-# Session lifetime (in seconds)
-   # 2 weeks
-
-# Session settings
+# ─── Session ────────────────────────────────────────────────────
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-SESSION_COOKIE_AGE = 1209600   # 2 weeks
+SESSION_COOKIE_AGE = 1209600  # 2 weeks
 SESSION_SAVE_EVERY_REQUEST = True
-
-# Professional security tip
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = os.environ.get('DEBUG', 'False') != 'True'  # ← ADDED (True in production)

@@ -1,0 +1,17 @@
+# Django
+*.pyc
+__pycache__/
+db.sqlite*
+media/
+*.log
+
+# VS Code
+.vscode/
+
+# Python environment
+env/
+venv/
+
+# PostgreSQL dumps (optional)
+*.sql
+*.backup
