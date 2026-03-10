@@ -69,11 +69,14 @@ WSGI_APPLICATION = 'R.wsgi.application'
 # Automatically uses Railway's DATABASE_URL in production,
 # falls back to your local PostgreSQL when developing
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://postgres:newpassword@localhost:5432/newprojectdb',
-        conn_max_age=600,
-        ssl_require=False,
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'newprojectdb',
+        'USER': 'postgres',
+        'PASSWORD': 'newpassword',
+        'HOST': '127.0.0.1',
+        'PORT': '5433',  # updated host port
+    }
 }
 
 # ─── Password validation ─────────────────────────────────────────
@@ -113,3 +116,14 @@ SESSION_COOKIE_AGE = 1209600  # 2 weeks
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = os.environ.get('DEBUG', 'False') != 'True'  # ← ADDED (True in production)
+
+# ─── CSRF & Security for development ─────────────────────────────
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',      # local dev
+    'http://localhost:8000',
+    'https://*.githubpreview.dev',  # Codespaces preview URL wildcard
+]
+
+# Allow cookies over HTTP during dev
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False

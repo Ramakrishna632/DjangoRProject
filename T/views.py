@@ -39,7 +39,7 @@ PLAN_DATA = {
     "plan9": {"name": "Ultimate Power Plant", "price": 100000, "daily": 35000,"days": 30, "vip": True},
 }
 
-RECHARGE_AMOUNTS = [450, 1850, 4550, 8950, 12500, 21000]
+RECHARGE_AMOUNTS = [580, 1850, 4550, 8950, 12500, 21000]
 
 def is_admin(user):
     return user.is_staff or user.is_superuser
@@ -215,7 +215,7 @@ def buy_product(request):
         return JsonResponse({"success": False, "message": "This product is currently unavailable"})
 
     if plan["vip"] and not profile.is_vip:
-        return JsonResponse({"success": False, "message": "VIP not activated. Contact admin."})
+        return JsonResponse({"success": False, "message": "VIP will br sctivated soon."})
 
     price           = Decimal(str(plan["price"]))
     total_available = wallet.recharge + wallet.balance
@@ -272,7 +272,7 @@ def recharge_page(request):
 # ══════════════════════════════════════════════
 @login_required(login_url='login')
 def payment_page(request):
-    amount = request.GET.get("amount", 450)
+    amount = request.GET.get("amount", 580)
     return render(request, "payment.html", {"amount": amount})
 
 
