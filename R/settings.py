@@ -75,7 +75,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'newpassword',
         'HOST': '127.0.0.1',
-        'PORT': '5433',  # updated host port
+        'PORT': '5432',  # updated host port
     }
 }
 
