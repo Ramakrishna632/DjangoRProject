@@ -4,14 +4,44 @@
 
 {% block content %}
 <!-- HEADER -->
-<div class="header"> 
-  <div class="profile">🛡️
-    <!-- <img src="{% static 'stryker.png' %}" alt="Stryker"> -->
-    <div>
-      <strong> Welcome {{ request.user.username }}</strong><br>
-      <span class="vip">{% if is_vip %}VIP ✓{% else %}VIP 0{% endif %}</span>
-    </div>
+<div class="header">
+
+  <div class="profile">
+
+      <img src="{% static 'stryker.png' %}" class="logo">
+
+      <div>
+        <strong>Welcome {{ request.user.username }}</strong><br>
+        <span class="vip">
+          {% if is_vip %}VIP ✓{% else %}VIP 0{% endif %}
+        </span>
+      </div>
+
   </div>
+
+</div>
+
+
+
+<!-- BANNER SLIDER -->
+<!-- AUTO SCROLL BANNER -->
+<div class="banner-wrapper">
+
+<div class="banner-track" id="bannerTrack">
+
+<img src="{% static 'investearn.png' %}" class="banner">
+<img src="{% static 'promotional4.png' %}" class="banner">
+<img src="{% static 'medicinpromotion.png' %}" class="banner">
+<img src="{% static 'vippromotion.png' %}" class="banner">
+
+<!-- duplicate images for infinite scroll -->
+<img src="{% static 'investearn.png' %}" class="banner">
+<img src="{% static 'promotional4.png' %}" class="banner">
+<img src="{% static 'medicinpromotion.png' %}" class="banner">
+<img src="{% static 'vippromotion.png' %}" class="banner">
+
+</div>
+
 </div>
 
 <!-- WALLET -->
@@ -44,10 +74,10 @@
     <img src="{% static 'above5.png' %}" alt="">
     <h4>Dry Iron</h4>
     <div class="info">
-      <div>₹580<br><small>Price</small></div>
-      <div>₹40<br><small>Daily</small></div>
-      <div>16<br><small>Days</small></div>
-      <div>₹640<br><small>Total</small></div>
+      <div>₹500<br><small>Price</small></div>
+      <div>₹20.5<br><small>Daily</small></div>
+      <div>45<br><small>Days</small></div>
+      <div>₹922<br><small>Total</small></div>
     </div>
     {% if ps.starter %}<button onclick="buyProduct('starter')">Buy Now</button>
     {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
@@ -57,10 +87,10 @@
     <img src="{% static 'above26.png' %}" alt="">
     <h4>Electric kettle</h4>
     <div class="info">
-      <div>₹2,199<br><small>Price</small></div>
-      <div>₹100<br><small>Daily</small></div>
-      <div>30<br><small>Days</small></div>
-      <div>₹3,000<br><small>Total</small></div>
+      <div>₹5500<br><small>Price</small></div>
+      <div>₹198<br><small>Daily</small></div>
+      <div>80<br><small>Days</small></div>
+      <div>₹15840.00<br><small>Total</small></div>
     </div>
     {% if ps.growth %}<button onclick="buyProduct('growth')">Buy Now</button>
     {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
@@ -81,12 +111,12 @@
 
   <div class="product">
     <img src="{% static 'coller10k.png' %}" alt="">
-    <h4>Summer Cooler/h4>
+    <h4>Summer Cooler</h4>
     <div class="info">
-      <div>₹14,111<br><small>Price</small></div>
-      <div>₹466<br><small>Daily</small></div>
-      <div>45<br><small>Days</small></div>
-      <div>₹21,000<br><small>Total</small></div>
+      <div>₹15000<br><small>Price</small></div>
+      <div>₹570<br><small>Daily</small></div>
+      <div>80<br><small>Days</small></div>
+      <div>₹45600.00<br><small>Total</small></div>
     </div>
     {% if ps.master8 %}<button onclick="buyProduct('master8')">Buy Now</button>
     {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
@@ -96,10 +126,10 @@
     <img src="{% static 'ac45k.png' %}" alt="">
     <h4>Split AC</h4>
     <div class="info">
-      <div>₹31,000<br><small>Price</small></div>
-      <div>₹775<br><small>Daily</small></div>
-      <div>40<br><small>Days</small></div>
-      <div>₹42,000<br><small>Total</small></div>
+      <div>₹36,000<br><small>Price</small></div>
+      <div>₹1440<br><small>Daily</small></div>
+      <div>80<br><small>Days</small></div>
+      <div>₹115200.00<br><small>Total</small></div>
     </div>
     {% if ps.fortune11 %}<button onclick="buyProduct('fortune11')">Buy Now</button>
     {% else %}<div class="coming-soon">Coming Soon</div>{% endif %}
@@ -337,6 +367,29 @@ async function buyProduct(key) {
   const data = await res.json();
   alert(data.message);
   if (data.success) location.reload();
+}
+
+
+function slideLeft(){
+
+const slider=document.getElementById("bannerSlider")
+
+slider.scrollBy({
+left:-300,
+behavior:"smooth"
+})
+
+}
+
+function slideRight(){
+
+const slider=document.getElementById("bannerSlider")
+
+slider.scrollBy({
+left:300,
+behavior:"smooth"
+})
+
 }
 </script>
 {% endblock %}

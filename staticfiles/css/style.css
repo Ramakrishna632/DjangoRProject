@@ -9,7 +9,7 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  background: #f2f4f8;
+  background: #0c0cde;
   padding-bottom: 70px;
   max-width: 480px;
   margin: 0 auto;
@@ -20,7 +20,7 @@ body {
 ============================ */
 .header {
   background: linear-gradient(135deg, #5b8cff, #7aa9ff);
-  padding: 15px;
+  padding: 20px;
   color: white;
 }
 
@@ -148,8 +148,8 @@ body {
 }
 
 .tab.active {
-  background: #6d9df6;
-  color: white;
+  background: #1608e1;
+  color: rgb(255, 255, 255);
 }
 
 /* ============================
@@ -213,7 +213,7 @@ body {
   margin-top: 8px;
   width: 100%;
   padding: 10px;
-  background: linear-gradient(135deg, #6f97ff, #4a6fe0);
+  background: linear-gradient(135deg, #0c4cee, #0e44e4);
   border: none;
   color: white;
   border-radius: 8px;
@@ -328,4 +328,86 @@ body {
   body {
     background: #dde4ef;
   }
+}
+
+
+
+.banner-wrapper{
+width:100%;
+overflow:hidden;
+margin-top:10px;
+}
+
+.banner-track{
+display:flex;
+gap:10px;
+width:max-content;
+animation:scrollBanner 25s linear infinite;
+}
+
+.banner{
+width:450px;
+height:120px;
+object-fit:cover;
+border-radius:10px;
+flex-shrink:0;
+}
+
+@keyframes scrollBanner{
+
+0%{
+transform:translateX(0);
+}
+
+100%{
+transform:translateX(-50%);
+}
+
+}
+
+@media (max-width:600px){
+
+.banner{
+width:450px;
+height:100px;
+}
+
+}
+
+.login-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e8efff;
+}
+
+
+.about-logo{
+background:#fff;
+width:60px;
+height:60px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 3px 8px rgba(0,0,0,0.2);
+}
+
+.about-logo img{
+width:45px;
+height:45px;
+object-fit:contain;
+}
+
+.register-logo{
+width:70px;
+height:70px;
+background:#fff;
+border-radius:50%;
+padding:8px;
+box-shadow:0 4px 12px rgba(0,0,0,0.2);
+object-fit:contain;
+display:block;
+margin:auto;
 }

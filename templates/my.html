@@ -26,9 +26,9 @@
 
 {% block content %}
 <div class="profile-header">
-  <div class="avatar">
-    <span>About</span>
-    <small>{% if is_vip %}ABOUT✓{% else %}App{% endif %}</small>
+  <!-- STRYKER LOGO -->
+  <div class="about-logo">
+    <img src="{% static 'stryker.png' %}" alt="logo">
   </div>
   <div class="user-info">
     <div class="phone">{{ request.user.username }}</div>

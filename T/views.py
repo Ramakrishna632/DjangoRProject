@@ -20,11 +20,11 @@ from .models import (
 #  PLAN DATA  (single source of truth)
 # ══════════════════════════════════════════════
 PLAN_DATA = {
-    "starter":   {"name": "Plan Starter",    "price": 580,    "daily": 40,   "days": 16,  "vip": False},
-    "growth":    {"name": "Plan Growth",     "price": 2199,   "daily": 100,  "days": 30,  "vip": False},
+    "starter":   {"name": "Plan Starter",    "price": 500,    "daily": 20.5,   "days": 45,  "vip": False},
+    "growth":    {"name": "Plan Growth",     "price": 5500,   "daily": 198,  "days": 80,  "vip": False},
     "lucky":     {"name": "Lucky",           "price": 5999,   "daily": 250,  "days": 30,  "vip": False},
-    "master8":   {"name": "Plan Master 8",   "price": 14111,  "daily": 466,  "days": 45,  "vip": False},
-    "fortune11": {"name": "Plan Fortune 11", "price": 31000,  "daily": 775,  "days": 40,  "vip": False},
+    "master8":   {"name": "Plan Master 8",   "price": 15000,  "daily": 570,  "days": 80,  "vip": False},
+    "fortune11": {"name": "Plan Fortune 11", "price": 36000,  "daily": 775,  "days": 40,  "vip": False},
     "elite27":   {"name": "Plan Elite 27",   "price": 75999,  "daily": 2000, "days": 100, "vip": False},
     "vision108": {"name": "Plan Vision 108", "price": 108999, "daily": 4000, "days": 75,  "vip": False},
    

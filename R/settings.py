@@ -68,26 +68,26 @@ WSGI_APPLICATION = 'R.wsgi.application'
 # ─── Database ────────────────────────────────────────────────────
 # Automatically uses Railway's DATABASE_URL in production,
 # falls back to your local PostgreSQL when developing
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'newprojectdb',
-#         'USER': 'postgres',
-#         'PASSWORD': 'newpassword',
-#         'HOST': '127.0.0.1',
-#         'PORT': '5432',  # updated host port
-#     }
-# }
-
-
-import os
-import dj_database_url
-
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'newprojectdb',
+        'USER': 'postgres',
+        'PASSWORD': 'newpassword',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',  # updated host port
+    }
 }
+
+
+# import os
+# import dj_database_url
+
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=os.environ.get("DATABASE_URL")
+#     )
+# }
 
 # ─── Password validation ─────────────────────────────────────────
 AUTH_PASSWORD_VALIDATORS = [
