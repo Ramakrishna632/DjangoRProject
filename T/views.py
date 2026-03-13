@@ -215,7 +215,7 @@ def buy_product(request):
         return JsonResponse({"success": False, "message": "This product is currently unavailable"})
 
     if plan["vip"] and not profile.is_vip:
-        return JsonResponse({"success": False, "message": "VIP will br sctivated soon."})
+        return JsonResponse({"success": False, "message": "VIP will be activated soon."})
 
     price           = Decimal(str(plan["price"]))
     total_available = wallet.recharge + wallet.balance
