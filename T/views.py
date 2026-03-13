@@ -9,7 +9,7 @@ from django.db import transaction as db_transaction
 from datetime import date, timedelta
 from decimal import Decimal
 import json, re
-
+from django.db.models import Sum
 from .models import (
     Profile, Wallet, Purchase, IncomeDayRecord,
     Transaction, RechargeRequest, WithdrawRequest,
@@ -179,7 +179,11 @@ def _process_daily_income(user):
         current = start
         while current < today and days_paid < purchase.days:
             day_key = current.strftime("%Y-%m-%d")
-            _, created = IncomeDayRecord.objects.get_or_create(purchase=purchase, day_key=day_key)
+            record, created = IncomeDayRecord.objects.get_or_create(
+                purchase=purchase,
+                day_key=day_key,
+                defaults={"income": purchase.daily_income}
+)
             if created:
                 wallet.balance      += purchase.daily_income
                 wallet.total_income += purchase.daily_income
@@ -389,10 +393,25 @@ def withdrawal_records(request):
 # ══════════════════════════════════════════════
 @login_required(login_url='login')
 def my_profile(request):
-    wallet,  _ = Wallet.objects.get_or_create(user=request.user)
-    profile, _ = Profile.objects.get_or_create(user=request.user)
-    return render(request, "my.html", {"wallet": wallet, "profile": profile})
 
+    # update daily income
+    _process_daily_income(request.user)
+
+    wallet, _ = Wallet.objects.get_or_create(user=request.user)
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+
+    today_key = date.today().strftime("%Y-%m-%d")
+
+    today_income = IncomeDayRecord.objects.filter(
+        purchase__user=request.user,
+        day_key=today_key
+    ).aggregate(total=Sum("income"))["total"] or 0
+
+    return render(request, "my.html", {
+        "wallet": wallet,
+        "profile": profile,
+        "today_income": today_income
+    })
 
 # ══════════════════════════════════════════════
 #  PERSONAL INFO  (replaces personal-info + bind pages)

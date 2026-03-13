@@ -82,14 +82,14 @@ class Purchase(models.Model):
 class IncomeDayRecord(models.Model):
     purchase = models.ForeignKey(Purchase, on_delete=models.CASCADE, related_name='income_days')
     day_key  = models.CharField(max_length=12)   # YYYY-MM-DD
+    income   = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
     class Meta:
         unique_together = ('purchase', 'day_key')
 
     def __str__(self):
-        return f"{self.purchase.plan_name} — {self.day_key}"
-
-
+        return f"{self.purchase.plan_name} - {self.day_key} - ₹{self.income}" 
+    
 # ─────────────────────────────────────────
 #  TRANSACTION LOG
 # ─────────────────────────────────────────
@@ -172,3 +172,4 @@ class ProductStatus(models.Model):
     def __str__(self):
         return f"{self.product_name} ({'ON' if self.is_active else 'OFF'})"
     
+
