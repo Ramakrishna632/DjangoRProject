@@ -72,26 +72,26 @@ WSGI_APPLICATION = 'R.wsgi.application'
 # ─── Database ────────────────────────────────────────────────────
 # Automatically uses Railway's DATABASE_URL in production,
 # falls back to your local PostgreSQL when developing
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'newprojectdb',
-        'USER': 'postgres',
-        'PASSWORD': 'newpassword',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',  # updated host port
-    }
-}
-
-
-# import os
-# import dj_database_url
-
 # DATABASES = {
-#     'default': dj_database_url.config(
-#         default=os.environ.get("DATABASE_URL")
-#     )
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'newprojectdb',
+#         'USER': 'postgres',
+#         'PASSWORD': 'newpassword',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',  # updated host port
+#     }
 # }
+
+
+import os
+import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get("DATABASE_URL")
+    )
+}
 
 # ─── Password validation ─────────────────────────────────────────
 AUTH_PASSWORD_VALIDATORS = [
@@ -132,10 +132,17 @@ SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = os.environ.get('DEBUG', 'False') != 'True'  # ← ADDED (True in production)
 
 # ─── CSRF & Security for development ─────────────────────────────
+# CSRF_TRUSTED_ORIGINS = [
+#     'http://127.0.0.1:8000',      # local dev
+#     'http://localhost:8000',
+#     'https://*.githubpreview.dev',  # Codespaces preview URL wildcard
+# ]
+
+
 CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:8000',      # local dev
-    'http://localhost:8000',
-    'https://*.githubpreview.dev',  # Codespaces preview URL wildcard
+    "https://djangorproject-1.onrender.com",
+    "https://striker-money-trustedapp.com",
+    "https://www.striker-money-trustedapp.com",
 ]
 
 # Allow cookies over HTTP during dev
