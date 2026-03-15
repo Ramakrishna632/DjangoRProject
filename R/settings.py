@@ -21,7 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ─── Security ────────────────────────────────────────────────────
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-j&*0b(7&*a!5tk078%^j+*^1wh4g9pn$o_a77zi^rd0@wz=kjf')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    "djangorproject-1.onrender.com",
+    "striker-money-trustedapp.com",
+    "www.striker-money-trustedapp.com"
+]
 
 # ─── Application definition ─────────────────────────────────────
 INSTALLED_APPS = [
